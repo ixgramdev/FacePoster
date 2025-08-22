@@ -6,13 +6,12 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from .config import DELAY_MIN, DELAY_MAX, SELENIUM_TIMEOUT
-from .utils import setup_logger
+from .config import CHROMEDRIVER_PATH, DELAY_MIN, DELAY_MAX, SELENIUM_TIMEOUT
+from .utils import setup_logger, leer_productos
 import logging
 
 def publicar_en_grupos(csv_path):
     setup_logger()
-    from .utils import leer_productos
     productos = leer_productos(csv_path)
 
     if not productos:
@@ -21,7 +20,7 @@ def publicar_en_grupos(csv_path):
         return
 
     # Inicializar Selenium
-    service = Service()
+    service = Service(CHROMEDRIVER_PATH)
     options = webdriver.ChromeOptions()
     driver = webdriver.Chrome(service=service, options=options)
 
@@ -72,4 +71,5 @@ def publicar_en_grupos(csv_path):
             logging.error(f"Error con el grupo {grupo}: {e}")
             print(f"Error con el grupo {grupo}")
 
+    driver.quit()
     driver.quit()
